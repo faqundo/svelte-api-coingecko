@@ -1,6 +1,7 @@
 <script>
   let titles = ["#", "Coin", "Price", "Price Change", "24h Volume"];
   let coins = [];
+  let filteredCoins = [];
 
   const loadCoins = async () => {
     const res = await fetch(
@@ -9,14 +10,28 @@
     const data = await res.json();
     console.log(data);
     coins = data;
+	filteredCoins = data;
   };
   loadCoins();
+
+  const searchCoin = (value) => {
+    filteredCoins = coins.filter((coin) =>
+      coin.name.toLowerCase().includes(value.toLowerCase()) || 
+	  coin.symbol.toLowerCase().includes(value.toLowerCase())
+    );
+  };
 </script>
 
 <main>
   <div class="container">
     <div class="row">
       <h1>Hello World</h1>
+      <input
+        type="text"
+        class="form-control bg-dark text-white rounded-0 border-0 my-4"
+        placeholder="Search your coin"
+        on:keyup={({ target: { value } }) => searchCoin(value)}
+      />
       <table class="table table-dark ">
         <thead>
           <tr>
@@ -26,17 +41,35 @@
           </tr>
         </thead>
         <tbody>
-          {#each coins as coin, index}
+          {#each filteredCoins as coin, index}
             <tr>
-              <td>{index + 1}</td>
+              <td class="text-muted">{index + 1}</td>
               <td>
-				  <img class="img-fluid me-2" src={coin.image} alt={coin.name} style="width: 2rem ">
+                <img
+                  class="img-fluid me-2"
+                  src={coin.image}
+                  alt={coin.name}
+                  style="width: 2rem "
+                />
                 <span>
-					{coin.name}
-				</span>
-				<span>
-					{coin.symbol}
-				</span>
+                  {coin.name}
+                </span>
+                <span class="text-muted text-uppercase ms-2">
+                  {coin.symbol}
+                </span>
+              </td>
+              <td>
+                ${coin.current_price.toLocaleString()}
+              </td>
+              <td
+                class={coin.price_change_percentage_24h > 0
+                  ? "text-success"
+                  : "text-danger"}
+              >
+                {coin.price_change_percentage_24h} %
+              </td>
+              <td>
+                ${coin.total_volume.toLocaleString()}
               </td>
             </tr>
           {/each}
