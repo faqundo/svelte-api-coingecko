@@ -33,7 +33,7 @@ import { onMount } from "svelte";
 <main>
   <div class="container">
     <div class="row">
-      <h1>Hello World</h1>
+      <h1>CoinMarket</h1>
       <input
         type="text"
         class="form-control bg-dark text-white rounded-0 border-0 my-4"
