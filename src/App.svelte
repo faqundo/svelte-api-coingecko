@@ -1,7 +1,11 @@
 <script>
+import { onMount } from "svelte";
+
+
   let titles = ["#", "Coin", "Price", "Price Change", "24h Volume"];
   let coins = [];
   let filteredCoins = [];
+  let ref = null
 
   const loadCoins = async () => {
     const res = await fetch(
@@ -20,6 +24,10 @@
 	  coin.symbol.toLowerCase().includes(value.toLowerCase())
     );
   };
+
+  onMount(()=>{
+	ref.focus()
+  })
 </script>
 
 <main>
@@ -31,6 +39,7 @@
         class="form-control bg-dark text-white rounded-0 border-0 my-4"
         placeholder="Search your coin"
         on:keyup={({ target: { value } }) => searchCoin(value)}
+		bind:this={ref}
       />
       <table class="table table-dark ">
         <thead>
